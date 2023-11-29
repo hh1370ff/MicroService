@@ -1,0 +1,35 @@
+version: '3'
+services:
+  mongo:
+    image: mongo
+
+  rabbitmq:
+    image: rabbitmq
+    ports:
+      - '5672:5672'
+
+  reservations:
+    build:
+      context: .
+      dockerfile: ./apps/reservations/dockerfile
+      target: development
+    command: npm run start:dev reservations
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/usr/src/app
+    env_file:
+      - ./apps/reservations/.env
+
+  auth:
+    build:
+      context: .
+      dockerfile: ./apps/auth/dockerfile
+      target: development
+    command: npm run start:dev auth
+    ports:
+      - '3002:3002'
+    volumes:
+      - .:/usr/src/app
+    env_file:
+      - ./apps/auth/.env
